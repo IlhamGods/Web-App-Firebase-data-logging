@@ -22,12 +22,12 @@ Penting juga untuk melakukan logging data ke firebase.  Tutorial untuk logging d
  1. Pergi ke Google Firebase : https://firebase.google.com/?hl=id
  2. Tambahkan app pada logo "+ Add app" yang terletak ada pojok kanan atas
     ![image](https://github.com/user-attachments/assets/840f9abd-0bf5-4c27-ae8b-649b5ad54810)
-3. Pilih ikon web app
-4. Tambahkan nama projek. Selanjutnya klik tombol centang pada opsi "Also set up firebase hosting for this app". Click register app
+ 3. Pilih ikon web app
+ 4. Tambahkan nama projek. Selanjutnya klik tombol centang pada opsi "Also set up firebase hosting for this app". Click register app
    
    ![image](https://github.com/user-attachments/assets/b03bbd9a-212f-45b7-966a-9fd4815a7ac1)
-6. Salin firebaseConfig pada :
-7. Klik next dan continue to console
+5. Salin firebaseConfig pada :https://github.com/IlhamGods/Web-App-Firebase-data-logging/blob/main/firebaseConfig/FirebaseConfig.js
+6. Klik next dan continue to console
 
 # Set-up firebase web app pada VSC
 1. Buka VSC, klik File > open folder > cari tempat folder yang kamu buat
@@ -51,17 +51,18 @@ Penting juga untuk melakukan logging data ke firebase.  Tutorial untuk logging d
 11. Pilih "Use an existing project", dan tekan enter
     ![image](https://github.com/user-attachments/assets/41a75247-4c86-425c-83ba-2d2d0b334e03)
 12. Selanjutnya, pilih firebase project pada direktori ini. Sebagai contoh, nama projectnya adalah ``ESP-Project`` dan tekan enter
+    
     ![image](https://github.com/user-attachments/assets/5b14f6c8-1f55-49e5-b84b-031ff06de992)
 13. Ikuti opsi ini:
     
     ![image](https://github.com/user-attachments/assets/c8047502-5cc5-4f8f-9b73-479a6e863780)
-15. Tekan enter pada pertanyaan yang menyatakan default security rules database file "What file should be used for Realtime Database Security Rules?"
-16. Firebase project sudah terinisialisasi, selanjutnya pergi ke VSC dan buat file penting dibawah project folder
+14. Tekan enter pada pertanyaan yang menyatakan default security rules database file "What file should be used for Realtime Database Security Rules?"
+15. Firebase project sudah terinisialisasi, selanjutnya pergi ke VSC dan buat file penting dibawah project folder
     ![image](https://github.com/user-attachments/assets/ff3676f1-79d7-43a3-8938-ccd4ea85fa07)
-17. Untuk mengecek jika semuanya sudah sesuai, masukkan kode perintah pada VSC terminal : ``firebase deploy``
+16. Untuk mengecek jika semuanya sudah sesuai, masukkan kode perintah pada VSC terminal : ``firebase deploy``
     ![image](https://github.com/user-attachments/assets/f8b62c8d-e47c-4bdc-be59-5af2b80aaa94)
     Jika sudah semuanya sudah sesuai, terdapat pesan "Deploy complete"
-18. Salin URL hosting dan pastekan pada web browser.
+17. Salin URL hosting dan pastekan pada web browser.
     ![Firebase-Hosting-Setup-Complete](https://github.com/user-attachments/assets/f05d372b-4683-4855-a51d-b5b1eddcc233)
     
 
