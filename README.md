@@ -24,9 +24,10 @@ Penting juga untuk melakukan logging data ke firebase.  Tutorial untuk logging d
     ![image](https://github.com/user-attachments/assets/840f9abd-0bf5-4c27-ae8b-649b5ad54810)
 3. Pilih ikon web app
 4. Tambahkan nama projek. Selanjutnya klik tombol centang pada opsi "Also set up firebase hosting for this app". Click register app
+   
    ![image](https://github.com/user-attachments/assets/b03bbd9a-212f-45b7-966a-9fd4815a7ac1)
-5. Salin firebaseConfig pada :
-6. Klik next dan continue to console
+6. Salin firebaseConfig pada :
+7. Klik next dan continue to console
 
 # Set-up firebase web app pada VSC
 1. Buka VSC, klik File > open folder > cari tempat folder yang kamu buat
