@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    html {font-family: Arial; display: inline-block; text-align: center;}
+    p {font-size: 1.2rem;}
+    body {margin: 0;}
+    .topnav {overflow: hidden; background-color: #50B8B4; color: white; font-size: 1rem;}
+    .content {padding: 20px;}
+    .card {background-color: white; box-shadow: 2px 2px 12px 1px rgba(140,140,140,.5);}
+    .cards {max-width: 700px; margin: 0 auto; display: grid; grid-gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));}
+    .reading {font-size: 1.4rem;}
+  </style>
+</head>
+<body>
+  <div class="topnav">
+    <h3>ESP32-S3 FIREBASE DATABASE</h3>
+  </div>
+  <div class="content">
+    <div class="cards">
+      <div class="card">
+        <h4><i class="fas fa-thermometer-half"></i> TEMPERATURE</h4>
+        <p><span class="reading"><span id="temp"></span> &deg;C</span></p>
+        <p class="timestamp">Last Reading: <span id="temp-timestamp"></span></p>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-tint"></i> HUMIDITY</h4>
+        <p><span class="reading"><span id="hum"></span> &percnt;</span></p>
+        <p class="timestamp">Last Reading: <span id="hum-timestamp"></span></p>
+      </div>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <h4>Temperature Chart</h4>
+        <div id="temp-chart"></div>
+      </div>
+      <div class="card">
+        <h4>Humidity Chart</h4>
+        <div id="hum-chart"></div>
+      </div>
+    </div>
+  </div>
+<script>
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "REPLACE_WITH_YOUR_API_KEY",
+  authDomain: "REPLACE_WITH_YOUR_AUTH_DOMAIN",
+  databaseURL: "REPLACE_WITH_YOUR_DATABASE_URL",
+  projectId: "REPLACE_WITH_YOUR_PROJECT_ID",
+  storageBucket: "REPLACE_WITH_YOUR_STORAGE_BUCKET",
+  messagingSenderId: "REPLACE_WITH_YOUR_SENDER_ID",
+  appId: "REPLACE_WITH_YOUR_APP_ID"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+var database = firebase.database();
+
+// Temperature gauge
+var tempGauge = new Gauge(document.getElementById('temp-gauge'), {
+    min: 0, max: 50,
+    dialStartAngle: 180, dialEndAngle: 0,
+    value: 0,
+    color: function(value) {
+        if(value < 20) {
+            return "#5ee432"; // green
+        }else if(value < 30) {
+            return "#fffa50"; // yellow
+        }else{
+            return "#f7347a"; // red
+        }
+    }
+});
+
+// Humidity gauge  
+var humGauge = new Gauge(document.getElementById('hum-gauge'), {
+    min: 0, max: 100,
+    dialStartAngle: 180, dialEndAngle: 0,
+    value: 0,
+    color: function(value) {
+        if(value < 40) {
+            return "#5ee432"; // green
+        }else if(value < 70) {
+            return "#fffa50"; // yellow
+        }else{
+            return "#f7347a"; // red
+        }
+    }
+});
+
+// Arrays to save database current values
+var chartTempArray = [];
+var chartHumArray = [];
+var chartTimeArray = [];
+
+// Get data from database
+database.ref('readings').on('value', function(snapshot) {
+  var data = snapshot.val();
+  
+  if (data) {
+    var temp = data.temperature;
+    var hum = data.humidity;
+    var timestamp = data.timestamp;
+    
+    // Update current readings
+    document.getElementById('temp').innerHTML = temp.toFixed(2);
+    document.getElementById('hum').innerHTML = hum.toFixed(2);
+    
+    // Update timestamps
+    var date = new Date(timestamp * 1000);
+    document.getElementById('temp-timestamp').innerHTML = date.toLocaleString();
+    document.getElementById('hum-timestamp').innerHTML = date.toLocaleString();
+    
+    // Update gauges
+    tempGauge.setValueAnimated(temp, 1);
+    humGauge.setValueAnimated(hum, 1);
+    
+    // Update charts
+    updateChart(temp, hum, timestamp);
+  }
+});
+
+function updateChart(temp, hum, timestamp) {
+  var date = new Date(timestamp * 1000);
+  
+  // Keep only last 20 readings
+  if (chartTimeArray.length > 20) {
+    chartTempArray.shift();
+    chartHumArray.shift();
+    chartTimeArray.shift();
+  }
+  
+  chartTempArray.push(temp);
+  chartHumArray.push(hum);
+  chartTimeArray.push(date);
+  
+  // Temperature chart
+  var tempTrace = {
+    x: chartTimeArray,
+    y: chartTempArray,
+    type: 'scatter',
+    mode: 'lines+markers',
+    name: 'Temperature',
+    line: {color: '#FF6B6B'}
+  };
+  
+  var tempLayout = {
+    title: 'Temperature Over Time',
+    xaxis: {title: 'Time'},
+    yaxis: {title: 'Temperature (°C)'}
+  };
+  
+  Plotly.newPlot('temp-chart', [tempTrace], tempLayout);
+  
+  // Humidity chart
+  var humTrace = {
+    x: chartTimeArray,
+    y: chartHumArray,
+    type: 'scatter',
+    mode: 'lines+markers',
+    name: 'Humidity',
+    line: {color: '#4ECDC4'}
+  };
+  
+  var humLayout = {
+    title: 'Humidity Over Time',
+    xaxis: {title: 'Time'},
+    yaxis: {title: 'Humidity (%)'}
+  };
+  
+  Plotly.newPlot('hum-chart', [humTrace], humLayout);
+}
+
+</script>
+</body>
+</html>
